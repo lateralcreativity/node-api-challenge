@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../data/helpers/projectModel');
+const db = require('../data/helpers/actionModel');
 
 router.get('/', (req, res) => {
     db.get()
@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
         res.status(200).json(payload);
     })
     .catch(error => {
-        res.status(500).json({ error: 'There was an error getting the projects' });
+        res.status(500).json({ error: 'There was an error getting the actions' });
     });
 });
 
@@ -19,38 +19,26 @@ router.get('/:id', (req, res) => {
         if(payload) {
             res.status(200).json(payload);
         } else {
-            res.status(404).json({ error: 'Project with that Id was not found' })
+            res.status(404).json({ error: 'Action with that Id was not found' })
         }
     })
     .catch(error => {
-        res.status(500).json({ error: 'There was an error getting the project' });
+        res.status(500).json({ error: 'There was an error getting the action' });
     });
 });
 
-router.get('/:id/actions', (req, res) => {
-    const id = req.params.id;
-
-    db.getProjectActions(id)
-    .then(payload => {
-        res.status(200).json(payload);
-    })
-    .catch(error => {
-        res.status(500).json({ error: 'There was an error getting the actions' })
-    })
-});
-
 router.post('/', (req, res) => {
-    const project = req.body;
+    const action = req.body;
 
-    if(!project.name || !project.description) {
+    if(!action.description || !action.project_id || !action.notes) {
         return res.status(400).json({ error: 'Name and Description are required' });
     } else {
-        db.insert(project)
+        db.insert(action)
         .then(payload => {
             res.status(201).json(payload);
         })
         .catch(error => {
-            res.status(500).json({ error: 'There was an error creating the project' });
+            res.status(500).json({ error: 'There was an error creating the action' });
         });
     }
 });
@@ -64,7 +52,7 @@ router.put('/:id', (req, res) => {
         res.status(200).json(payload);
     })
     .catch(error => {
-        res.status(500).json({ error: 'There was an error updating the project' });
+        res.status(500).json({ error: 'There was an error updating the action' });
     });
 });
 
@@ -76,7 +64,7 @@ router.delete('/:id', (req, res) => {
         res.status(200).json(payload);
     })
     .catch(error => {
-        res.status(500).json({ message: 'There was an error deleting the project' })
+        res.status(500).json({ message: 'There was an error deleting the action' })
     })
 })
 
