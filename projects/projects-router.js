@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
         res.status(200).json(payload);
     })
     .catch(error => {
-        res.status(500).json({ error: 'There was an error getting the users' });
+        res.status(500).json({ error: 'There was an error getting the projects' });
     });
 });
 
@@ -23,8 +23,49 @@ router.get('/:id', (req, res) => {
         }
     })
     .catch(error => {
-        res.status(500).json({ error: 'There was an error getting the user' });
+        res.status(500).json({ error: 'There was an error getting the project' });
     });
+});
+
+router.post('/', (req, res) => {
+    const project = req.body;
+
+    if(!project.name || !project.description) {
+        return res.status(400).json({ error: 'Name and Description are required' });
+    } else {
+        db.insert(project)
+        .then(payload => {
+            res.status(201).json(payload);
+        })
+        .catch(error => {
+            res.status(500).json({ error: 'There was an error creating the project' });
+        });
+    }
+});
+
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const updates = req.body;
+
+    db.update(id, updates)
+    .then(payload => {
+        res.status(200).json(payload);
+    })
+    .catch(error => {
+        res.status(500).json({ error: 'There was an error updating the project' });
+    });
+});
+
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+
+    db.remove(id)
+    .then(payload => {
+        res.status(200).json(payload);
+    })
+    .catch(error => {
+        res.status(500).json({ message: 'There was an error deleting the user' })
+    })
 })
 
 module.exports = router;
