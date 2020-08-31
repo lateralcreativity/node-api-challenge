@@ -27,6 +27,18 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.get('/:id/actions', (req, res) => {
+    const id = req.params.id;
+
+    db.getProjectActions(id)
+    .then(payload => {
+        res.status(200).json(payload);
+    })
+    .catch(error => {
+        res.status(500).json({ error: 'There was an error getting the actions' })
+    })
+});
+
 router.post('/', (req, res) => {
     const project = req.body;
 
